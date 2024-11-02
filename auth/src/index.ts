@@ -7,8 +7,8 @@ app.use(json())
 const SERVICE = "Auth"
 const PORT = process.env.PORT || 3000
 
-app.get("/auth", (req, res) => {
-    res.send(`You have reached the Auth service.`)
+app.get("/api/users/currentuser", (req, res) => {
+    res.send(`Hi There!`)
     }
 )
 
