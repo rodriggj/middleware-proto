@@ -15,16 +15,16 @@ spec:
       containers: 
         - name: auth
           image: rodriggj/auth
+
 --- 
 apiVersion: v1
 kind: Service
-metadata: 
-  name: auth-srv
-spec: 
-  selector: 
+metadata:
+  name: auth-service
+spec:
+  selector:
     app: auth
-    ports: 
-      - name: auth
-        protocol: TCP
-        port: 3000
-        targetPort: 3000
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
