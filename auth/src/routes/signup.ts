@@ -22,6 +22,7 @@ router.post("/api/users/signup",
         }
 
         console.log('Creating a new user...')
+        
         throw new DatabaseConnectionError()
 
         res.send({})
