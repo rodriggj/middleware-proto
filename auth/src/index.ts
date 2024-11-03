@@ -8,7 +8,7 @@ import { signUpRouter } from './routes/signup'
 import { signOutRouter } from './routes/signout'
 
 // Import ErrorHandling Middleware
-import { errorHandler } from './middleware/error-handling'
+import { errorHandler } from './middleware/error-handler'
 
 const app = express()
 app.use(json())
