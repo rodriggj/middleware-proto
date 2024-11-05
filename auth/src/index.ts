@@ -1,4 +1,5 @@
 import express from 'express'
+import 'express-async-errors'
 import { json } from 'body-parser'
 
 // Import Auth Routers 
@@ -22,7 +23,7 @@ app.use(signInRouter)
 app.use(signUpRouter)
 app.use(signOutRouter)
 
-app.get('*', () => {
+app.get('*', async () => {
     throw new NotFoundError()
 })
 
