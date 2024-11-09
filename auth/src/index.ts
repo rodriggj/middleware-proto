@@ -23,6 +23,9 @@ app.use(signInRouter)
 app.use(signUpRouter)
 app.use(signOutRouter)
 
+// Error handler
+app.use(errorHandler);
+
 app.get('*', async () => {
     throw new NotFoundError()
 })
@@ -38,7 +41,7 @@ const start = async () => {
   };
   
   app.listen(3000, () => {
-    console.log('Listening on port 3000!!!!!!!!');
+    console.log(`Listen to ${SERVICE} service on port ${PORT}`);
   });
   
   start();
