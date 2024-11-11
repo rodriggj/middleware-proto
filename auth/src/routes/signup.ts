@@ -1,10 +1,10 @@
 import express from 'express'
-import { body, validationResult } from 'express-validator'
+import { body } from 'express-validator'
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken'
 
+import { validateRequest } from '../middleware/validate-request';
 import { User } from '../models/user'
-import { RequestValidationError } from '../errors/request-validation-error'
 import { BadRequestError } from '../errors/bad-request-error';
 
 const router = express.Router()
@@ -16,13 +16,9 @@ router.post("/api/users/signup",
         .trim()  // remove any spaces
         .isLength({ min: 4, max: 20 })  // validate that the password is between 4 and 20 chars
         .withMessage("Password must be between 4 and 20 characters"),
-    ], async (req: Request, res: Response): Promise<any> => {
-        const errors = validationResult(req)
-
-        // Check for validation errors
-        if (!errors.isEmpty()) {
-            throw new RequestValidationError(errors.array());
-        }
+    ], 
+    validateRequest,   // middleware function to check validation results
+    async (req: Request, res: Response): Promise<any> => {
       
         // Capture the user input for email and password
         const { email, password } = req.body;
