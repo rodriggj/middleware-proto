@@ -37,23 +37,29 @@ app.use(signOutRouter)
 // Error handler
 app.use(errorHandler)
 app.get('*', async () => {
-    throw new NotFoundError()
+  throw new NotFoundError()
 })
 
 // Connect to MongoDB
 const start = async () => {
-    try {
-      await mongoose.connect('mongodb://auth-mongo-srv:27017/auth');
-      console.log('Connected to MongoDb');
-    } catch (err) {
-      console.error(err);
-    }
-  };
+
+  // Checks to see if there is a JWT_KEY as an env var
+  if(!process.env.JWT_KEY) {
+    throw new Error('JWT_KEY must be defined.')
+  }
+
+  try {
+    await mongoose.connect('mongodb://auth-mongo-srv:27017/auth');
+    console.log('Connected to MongoDb');
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 // Cnfigure App Listener
-  app.listen(3000, () => {
-    console.log(`Listen to ${SERVICE} service on port ${PORT}`);
-  });
+app.listen(3000, () => {
+  console.log(`Listen to ${SERVICE} service on port ${PORT}`);
+});
 
 // Kickoff Mongoose Connection 
-  start();
+start();
