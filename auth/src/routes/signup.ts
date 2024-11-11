@@ -7,7 +7,6 @@ import { User } from '../models/user'
 import { RequestValidationError } from '../errors/request-validation-error'
 import { BadRequestError } from '../errors/bad-request-error';
 
-
 const router = express.Router()
 
 router.post("/api/users/signup",
@@ -36,6 +35,7 @@ router.post("/api/users/signup",
             throw new BadRequestError('Email in use');
         }
       
+        // Create and Save a new user in the Mongodb
         const user = User.build({ email, password });
         await user.save();
 
