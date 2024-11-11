@@ -27,6 +27,15 @@ const userSchema =  new mongoose.Schema({
         type: String,
         required: true
     }
+}, {   // within the userSchema Mongoose provides a method to convert our existing payload to a custom payload using the toJSON() & transform() methods
+    toJSON: {
+        transform (doc, ret) {
+            ret.id = ret._id
+            delete ret._id
+            delete ret.password
+            delete ret.__v
+        }
+    }
 })
 
 // new method to ensure our password gets hashed in our User model
