@@ -9,10 +9,14 @@ import { currentUserRouter } from './routes/current-user'
 import { signInRouter } from './routes/signin'
 import { signUpRouter } from './routes/signup'
 import { signOutRouter } from './routes/signout'
+
+// Import Error Handlers
 import { errorHandler } from './middleware/error-handler'
 import { NotFoundError } from './errors/not-found-error'
 
 const app = express()
+
+// Configure the JWT, Cookie, and Session Objects
 app.set('trust proxy', true)   // lets express know that traffic is being proxied by ingress-nginx and the traffic is secure
 app.use(json())
 app.use(cookieSession({
@@ -20,6 +24,7 @@ app.use(cookieSession({
   secure: true   // require https connection
 }))
 
+// Console Log output
 const SERVICE = "Auth"
 const PORT = process.env.PORT || 3000
 
@@ -30,8 +35,7 @@ app.use(signUpRouter)
 app.use(signOutRouter)
 
 // Error handler
-app.use(errorHandler);
-
+app.use(errorHandler)
 app.get('*', async () => {
     throw new NotFoundError()
 })
@@ -45,10 +49,11 @@ const start = async () => {
       console.error(err);
     }
   };
-  
+
+// Cnfigure App Listener
   app.listen(3000, () => {
     console.log(`Listen to ${SERVICE} service on port ${PORT}`);
   });
-  
+
+// Kickoff Mongoose Connection 
   start();
-  
