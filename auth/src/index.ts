@@ -44,6 +44,7 @@ app.get('*', async () => {
 const start = async () => {
 
   // Checks to see if there is a JWT_KEY as an env var
+  // We do this here in App Start up vs. in the Route Handler in the event the route is never called
   if(!process.env.JWT_KEY) {
     throw new Error('JWT_KEY must be defined.')
   }
