@@ -20,7 +20,7 @@ app.set('trust proxy', true)   // lets express know that traffic is being proxie
 app.use(json())
 app.use(cookieSession({
   signed: false,   // doesn't need to be encrypted b/c JWT already does this
-  secure: true   // require https connection
+  secure: process.env.NODE_ENV !== 'test'   // changed this to allow for when in test env we don't have to send via HTTPS to allow JEST tests to execute
 }))
 
 // Auth Services Routes
