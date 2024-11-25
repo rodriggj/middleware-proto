@@ -7,6 +7,8 @@ let mongo: any
 // Before we start our tests, we need to create an instance of MongoMemoryServer in memory, to do this we will 
 // define a hook function, and make it async. This functional will run "beforeAll" subsequent tasks in our function
 beforeAll(async () => {
+    process.env.JWT_KEY = 'asdfasdf'   //setting the JWT_KEY for the test
+
     mongo = await MongoMemoryServer.create();
     const mongoUri = mongo.getUri();
 
