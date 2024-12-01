@@ -1,15 +1,24 @@
-// Component Side Rendering
-const LandingPage = ({ color }) => {
-    console.log(`I am in the component. Color ${color} `)
-    return <h1>Landing Page</h1>
-}
-
-// Server Side Rendering
-// Here we can define initial Server Side props that we can pass to the component
-LandingPage.getInitialProps = () => {
-    console.log('I am on the server.')
-
-    return { color: 'red' }
-}
-
-export default LandingPage
+import axios from 'axios';
+ 
+const LandingPage = ({ currentUser }) => {
+    console.log(currentUser);
+    return <h1>Hello, {currentUser?.email ?? 'user'}</h1>;
+};
+ 
+export const getServerSideProps = async ({ req }) => {
+    let res;
+    if (typeof window === 'undefined') {
+        res = await axios.get(
+            'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/users/currentuser',
+            {
+                withCredentials: true,
+                headers: req.headers
+            }
+        );
+    } else {
+        res = await axios.get('/api/users/currentuser');
+    }
+    return { props: res.data };
+};
+ 
+export default LandingPage; 
