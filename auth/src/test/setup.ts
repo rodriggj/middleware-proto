@@ -1,33 +1,56 @@
-import { MongoMemoryServer } from 'mongodb-memory-server'
-import mongoose from 'mongoose'
-import { app } from '../app'   // our express app that we moved from index to app file
+import { MongoMemoryServer } from "mongodb-memory-server";
+import mongoose from "mongoose";
+import request from "supertest";
+import { app } from "../app";
 
-let mongo: any
+declare global {
+  var signin: () => Promise<string[]>;
+}
 
-// Before we start our tests, we need to create an instance of MongoMemoryServer in memory, to do this we will 
-// define a hook function, and make it async. This functional will run "beforeAll" subsequent tasks in our function
+let mongo: any;
 beforeAll(async () => {
-    process.env.JWT_KEY = 'asdfasdf'   //setting the JWT_KEY for the test
+  process.env.JWT_KEY = "asdfasdf";
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-    mongo = await MongoMemoryServer.create();
-    const mongoUri = mongo.getUri();
+  const mongo = await MongoMemoryServer.create();
+  const mongoUri = mongo.getUri();
 
-    await mongoose.connect(mongoUri, {});
-})
+  await mongoose.connect(mongoUri, {});
+});
 
 beforeEach(async () => {
-    if (mongoose.connection.db) {
-      const collections = await mongoose.connection.db.collections();
-   
-      for (let collection of collections) {
-        await collection.deleteMany({});
-      }
-    }
-  });
+  if (mongoose.connection.db) {
+    const collections = await mongoose.connection.db.collections();
 
-  afterAll(async () => {
-    if (mongo) {
-      await mongo.stop();
+    for (let collection of collections) {
+      await collection.deleteMany({});
     }
-    await mongoose.connection.close();
-  });
+  }
+});
+
+afterAll(async () => {
+  if (mongo) {
+    await mongo.stop();
+  }
+  await mongoose.connection.close();
+});
+
+global.signin = async () => {
+  const email = "test@test.com";
+  const password = "password";
+
+  const response = await request(app)
+    .post("/api/users/signup")
+    .send({
+      email,
+      password,
+    })
+    .expect(201);
+
+  const cookie = response.get("Set-Cookie");
+
+  if (!cookie) {
+    throw new Error("Failed to get cookie from response");
+  }
+  return cookie;
+};
