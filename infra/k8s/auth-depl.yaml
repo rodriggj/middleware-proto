@@ -15,9 +15,9 @@ spec:
       containers:
         - name: auth
           image: rodriggj/auth
-          env: 
+          env:
             - name: JWT_KEY
-              valueFrom: 
+              valueFrom:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
